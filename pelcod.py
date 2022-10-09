@@ -68,7 +68,7 @@ def main():
 
     if pygame.joystick.get_init() == 0:
         print("No controller found")
-        pygame.joystick.quit()
+        pygame.quit()
         return
 
     joystick = pygame.joystick.Joystick(0)
@@ -117,7 +117,7 @@ def main():
         print(pelco.message.hex(" "))
         clock.tick(137)
 
-    pygame.joystick.quit()
+    pygame.quit()
 
 
 if __name__ == "__main__":
