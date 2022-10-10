@@ -96,7 +96,7 @@ def main():
         tele = not wide and zoom_tele > -1 + 0.01
         wide = not tele and zoom_wide > -1 + 0.01
 
-        if left or right:
+        if left or right or up or down:
             pan_speed = int(39 * abs(horizontal))
             tilt_speed = int(39 * abs(vertical))
         else:
