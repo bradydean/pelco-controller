@@ -66,7 +66,7 @@ def main():
     pygame.joystick.init()
     clock = pygame.time.Clock()
 
-    if pygame.joystick.get_init() == 0:
+    if pygame.joystick.get_count() == 0:
         print("No controller found")
         pygame.quit()
         return
