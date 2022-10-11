@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import pygame
+import serial
+import time
+
 from dataclasses import dataclass
 
 
@@ -74,13 +77,21 @@ def main():
     joystick = pygame.joystick.Joystick(0)
     joystick.init()
 
+    camera = serial.Serial("COM3")
+    camera.baudrate = 9600
+    camera.bytesize = 8
+    camera.parity = "N"
+    camera.stopbits = 1
+
+    time.sleep(0.5)
+
     wide = False
     done = False
 
     while not done:
 
         for event in pygame.event.get():
-            if event.type == pygame.JOYBUTTONDOWN and event.button == 2:
+            if event.type == pygame.JOYBUTTONDOWN and event.button == 3:
                 done = True
 
         horizontal = joystick.get_axis(0)
@@ -114,10 +125,13 @@ def main():
             pan_speed=pan_speed,
             tilt_speed=tilt_speed,
         )
-        print(pelco.message.hex(" "))
+        message = pelco.message
+        print(message.hex(" "))
+        camera.write(message)
         clock.tick(137)
 
     pygame.quit()
+    camera.close()
 
 
 if __name__ == "__main__":
