@@ -2,7 +2,7 @@
 
 import pygame
 import serial
-import time
+import argparse
 
 from dataclasses import dataclass
 
@@ -64,7 +64,7 @@ class PelcoD:
         return bytes([0xFF]) + data + bytes([checksum])
 
 
-def main():
+def main(device):
     pygame.init()
     pygame.joystick.init()
     clock = pygame.time.Clock()
@@ -77,13 +77,7 @@ def main():
     joystick = pygame.joystick.Joystick(0)
     joystick.init()
 
-    camera = serial.Serial("COM3")
-    camera.baudrate = 9600
-    camera.bytesize = 8
-    camera.parity = "N"
-    camera.stopbits = 1
-
-    time.sleep(0.5)
+    camera = serial.Serial(device)
 
     wide = False
     done = False
@@ -135,4 +129,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Pelco D controller")
+    parser.add_argument("device", help="Device path or COM port")
+    args = parser.parse_args()
+    main(args.device)
