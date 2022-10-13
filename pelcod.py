@@ -104,30 +104,32 @@ def main(device):
         tele = not wide and zoom_tele > -1 + 0.01
         wide = not tele and zoom_wide > -1 + 0.01
 
-        if left or right:
-            pan_speed = int(0x39 * abs(horizontal))
-        else:
-            pan_speed = 0
+        if left or right or up or down or tele or wide:
+            if left or right:
+                pan_speed = int(0x39 * abs(horizontal))
+            else:
+                pan_speed = 0
 
-        if up or down:
-            tilt_speed = int(0x39 * abs(vertical))
-        else:
-            tilt_speed = 0
+            if up or down:
+                tilt_speed = int(0x39 * abs(vertical))
+            else:
+                tilt_speed = 0
 
-        pelco = PelcoD(
-            addr=1,
-            up=up,
-            down=down,
-            left=left,
-            right=right,
-            zoom_wide=wide,
-            zoom_tele=tele,
-            pan_speed=pan_speed,
-            tilt_speed=tilt_speed,
-        )
-        message = pelco.message
-        print(message.hex(" "))
-        camera.write(message)
+            pelco = PelcoD(
+                addr=1,
+                up=up,
+                down=down,
+                left=left,
+                right=right,
+                zoom_wide=wide,
+                zoom_tele=tele,
+                pan_speed=pan_speed,
+                tilt_speed=tilt_speed,
+            )
+            message = pelco.message
+            print(message.hex(" "))
+            camera.write(message)
+
         clock.tick(137)
 
     pygame.quit()
