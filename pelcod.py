@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+from os import environ
+
+environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+
 import pygame
 import serial
 import argparse
@@ -66,7 +70,6 @@ class PelcoD:
 
 def main(device):
     pygame.init()
-    pygame.joystick.init()
     clock = pygame.time.Clock()
 
     if pygame.joystick.get_count() == 0:
@@ -101,11 +104,14 @@ def main(device):
         tele = not wide and zoom_tele > -1 + 0.01
         wide = not tele and zoom_wide > -1 + 0.01
 
-        if left or right or up or down:
-            pan_speed = int(39 * abs(horizontal))
-            tilt_speed = int(39 * abs(vertical))
+        if left or right:
+            pan_speed = int(0x39 * abs(horizontal))
         else:
             pan_speed = 0
+
+        if up or down:
+            tilt_speed = int(0x39 * abs(vertical))
+        else:
             tilt_speed = 0
 
         pelco = PelcoD(
