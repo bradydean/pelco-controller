@@ -85,50 +85,67 @@ def main(device):
     wide = False
     done = False
 
+    should_quit = False
+    should_move = False
+    should_print = False
+
     while not done:
 
         for event in pygame.event.get():
             if event.type == pygame.JOYBUTTONDOWN and event.button == 3:
-                done = True
+                should_quit = True
+            elif event.type == pygame.JOYAXISMOTION:
+                should_move = True
+            elif event.type == pygame.JOYBUTTONDOWN and event.button == 2:
+                should_print = True
 
-        horizontal = joystick.get_axis(0)
-        vertical = joystick.get_axis(1)
-        zoom_tele = joystick.get_axis(5)
-        zoom_wide = joystick.get_axis(2)
+        if should_quit:
+            done = True
+        elif should_print:
+            print("hello")
+        elif should_move:
+            horizontal = joystick.get_axis(0)
+            vertical = joystick.get_axis(1)
+            zoom_tele = joystick.get_axis(5)
+            zoom_wide = joystick.get_axis(2)
 
-        left = abs(horizontal) > 0.1 and horizontal < 0
-        right = abs(horizontal) > 0.1 and horizontal > 0
-        up = abs(vertical) > 0.1 and vertical < 0
-        down = abs(vertical) > 0.1 and vertical > 0
+            left = abs(horizontal) > 0.1 and horizontal < 0
+            right = abs(horizontal) > 0.1 and horizontal > 0
+            up = abs(vertical) > 0.1 and vertical < 0
+            down = abs(vertical) > 0.1 and vertical > 0
 
-        tele = not wide and zoom_tele > -1 + 0.01
-        wide = not tele and zoom_wide > -1 + 0.01
+            tele = not wide and zoom_tele > -1 + 0.01
+            wide = not tele and zoom_wide > -1 + 0.01
 
-        if left or right or up or down or tele or wide:
-            if left or right:
-                pan_speed = int(0x39 * abs(horizontal))
-            else:
-                pan_speed = 0
+            if left or right or up or down or tele or wide:
+                if left or right:
+                    pan_speed = int(0x39 * abs(horizontal))
+                else:
+                    pan_speed = 0
 
-            if up or down:
-                tilt_speed = int(0x39 * abs(vertical))
-            else:
-                tilt_speed = 0
+                if up or down:
+                    tilt_speed = int(0x39 * abs(vertical))
+                else:
+                    tilt_speed = 0
 
-            pelco = PelcoDMovement(
-                addr=1,
-                up=up,
-                down=down,
-                left=left,
-                right=right,
-                zoom_wide=wide,
-                zoom_tele=tele,
-                pan_speed=pan_speed,
-                tilt_speed=tilt_speed,
-            )
-            message = pelco.message
-            print(message.hex(" "))
-            camera.write(message)
+                pelco = PelcoDMovement(
+                    addr=1,
+                    up=up,
+                    down=down,
+                    left=left,
+                    right=right,
+                    zoom_wide=wide,
+                    zoom_tele=tele,
+                    pan_speed=pan_speed,
+                    tilt_speed=tilt_speed,
+                )
+                message = pelco.message
+                print(message.hex(" "))
+                camera.write(message)
+
+        should_move = False
+        should_quit = False
+        should_print = False
 
         clock.tick(137)
 
