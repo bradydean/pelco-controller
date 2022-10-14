@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
+
 from os import environ
-
-from serial import SerialException
-
-from controller import Controller
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
@@ -11,6 +8,8 @@ import sys
 import pygame
 import serial
 import argparse
+
+from controller import Controller
 
 
 def main(device):
@@ -26,7 +25,7 @@ def main(device):
 
     try:
         camera = serial.Serial(device)
-    except SerialException as e:
+    except serial.SerialException as e:
         print(f"Couldn't get serial device: {e}")
         sys.exit(1)
 
