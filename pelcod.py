@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-
 from os import environ
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
+import sys
 import pygame
 import serial
 import argparse
@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class PelcoD:
+class PelcoDMovement:
     """1: addr 0xFF
     2: addr
     3: cmd1 (command extension)
@@ -75,7 +75,7 @@ def main(device):
     if pygame.joystick.get_count() == 0:
         print("No controller found")
         pygame.quit()
-        return
+        sys.exit(1)
 
     joystick = pygame.joystick.Joystick(0)
     joystick.init()
@@ -115,7 +115,7 @@ def main(device):
             else:
                 tilt_speed = 0
 
-            pelco = PelcoD(
+            pelco = PelcoDMovement(
                 addr=1,
                 up=up,
                 down=down,
