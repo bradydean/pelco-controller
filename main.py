@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from os import environ
 
+from serial import SerialException
+
 from controller import Controller
 
 environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
@@ -21,7 +23,13 @@ def main(device):
 
     joystick = pygame.joystick.Joystick(0)
     joystick.init()
-    camera = serial.Serial(device)
+
+    try:
+        camera = serial.Serial(device)
+    except SerialException as e:
+        print(f"Couldn't get serial device: {e}")
+        sys.exit(1)
+
     controller = Controller(joystick=joystick, camera=camera)
     controller.run()
     pygame.quit()
