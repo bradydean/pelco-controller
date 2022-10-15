@@ -46,13 +46,12 @@ class PelcoDMovement:
 
         if self.right:
             cmd2 |= self.RIGHT
-
-        if self.left:
+        elif self.left:
             cmd2 |= self.LEFT
 
         data1 = self.pan_speed
         data2 = self.tilt_speed
 
         data = bytes([self.addr, cmd1, cmd2, data1, data2])
-        checksum = sum(data) % 255
+        checksum = sum(data) % 256
         return bytes([0xFF]) + data + bytes([checksum])
