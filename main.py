@@ -51,7 +51,7 @@ def main(device):
         joystick=joystick,
         camera=camera,
         window=window,
-        manager=manager,
+        ui_manager=manager,
         elements=elements,
     )
     controller.run()

@@ -17,7 +17,7 @@ class Controller:
     joystick: pygame.joystick.Joystick
     camera: Serial
     window: pygame.surface.Surface
-    manager: pygame_gui.UIManager
+    ui_manager: pygame_gui.UIManager
     elements: ElementContainer
     time_delta: float = 0.0
     command: bytes = field(default_factory=bytes)
@@ -42,7 +42,7 @@ class Controller:
 
     def handle_events(self):
         for event in pygame.event.get():
-            self.manager.process_events(event)
+            self.ui_manager.process_events(event)
             if event.type == pygame.JOYBUTTONDOWN and event.button == 2:
                 self.done = True
             elif event.type == pygame.QUIT:
@@ -101,14 +101,14 @@ class Controller:
             self.issue_command()
 
     def tick(self):
-        self.manager.update(self.time_delta)
+        self.ui_manager.update(self.time_delta)
         self.time_delta = self.clock.tick(self.frame_rate) / 1000.0
 
     def display(self):
         background = pygame.Surface((800, 600))
         background.fill(pygame.Color("#202124"))
         self.window.blit(background, (0, 0))
-        self.manager.draw_ui(self.window)
+        self.ui_manager.draw_ui(self.window)
         pygame.display.update()
 
     def update_ui(self):
