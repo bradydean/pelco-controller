@@ -7,6 +7,18 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "pygame-gui"
+version = "0.6.4"
+description = "A GUI module for pygame 2"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pygame = ">=2.0.1"
+python-i18n = ">=0.3.9"
+
+[[package]]
 name = "pyserial"
 version = "3.5"
 description = "Python Serial Port Extension"
@@ -17,11 +29,24 @@ python-versions = "*"
 [package.extras]
 cp2110 = ["hidapi"]
 
+[[package]]
+name = "python-i18n"
+version = "0.3.9"
+description = "Translation library for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+yaml = ["pyyaml (>=3.10)"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "bbb5a44095f124a016ecd44407316f27e171c9ce6d761c9fe5cc69074b432690"
+content-hash = "c5d471949c916f8cae6cb09fcb3e61a20690ab0af58f3b736e442b362112a9ac"
 
 [metadata.files]
 pygame = []
+pygame-gui = []
 pyserial = []
+python-i18n = []

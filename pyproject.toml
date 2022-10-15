@@ -8,6 +8,7 @@ authors = ["Brady Dean <bradyddean@gmail.com>"]
 python = "^3.10"
 pygame = "^2.1.2"
 pyserial = "^3.5"
+pygame-gui = "^0.6.4"
 
 
 [build-system]

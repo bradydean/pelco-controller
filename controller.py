@@ -1,4 +1,5 @@
 import pygame
+import pygame_gui
 
 from dataclasses import dataclass, field
 from serial import Serial
@@ -6,9 +7,19 @@ from pelcod import PelcoDMovement
 
 
 @dataclass
+class ElementContainer:
+    fps: pygame_gui.elements.UITextBox
+    command: pygame_gui.elements.UITextBox
+
+
+@dataclass
 class Controller:
     joystick: pygame.joystick.Joystick
     camera: Serial
+    window: pygame.surface.Surface
+    manager: pygame_gui.UIManager
+    elements: ElementContainer
+    time_delta: float = 0.0
     command: bytes = field(default_factory=bytes)
     clock: pygame.time.Clock = field(default_factory=pygame.time.Clock)
     done: bool = False
@@ -32,7 +43,10 @@ class Controller:
 
     def handle_events(self):
         for event in pygame.event.get():
+            self.manager.process_events(event)
             if event.type == pygame.JOYBUTTONDOWN and event.button == 3:
+                self.done = True
+            elif event.type == pygame.QUIT:
                 self.done = True
             elif event.type == pygame.JOYAXISMOTION:
                 self.should_move = True
@@ -78,9 +92,6 @@ class Controller:
             tilt_speed=self.tilt_speed,
         ).message
 
-    def print_command(self):
-        print(self.command.hex(" "))
-
     def issue_command(self):
         self.camera.write(self.command)
 
@@ -91,18 +102,33 @@ class Controller:
             if self.should_issue_command():
                 self.determine_speed()
                 self.construct_command()
-                self.print_command()
                 self.issue_command()
 
     def clear_flags(self):
         self.should_move = False
 
     def tick(self):
-        self.clock.tick(self.frame_rate)
+        self.manager.update(self.time_delta)
+        self.time_delta = self.clock.tick(self.frame_rate) / 1000.0
+
+    def display(self):
+        background = pygame.Surface((800, 600))
+        background.fill(pygame.Color("#000000"))
+        self.window.blit(background, (0, 0))
+        self.manager.draw_ui(self.window)
+        pygame.display.update()
+
+    def update_ui(self):
+        self.elements.fps.clear_text_surface()
+        self.elements.fps.set_text(f"{int(self.clock.get_fps())}")
+        self.elements.command.clear_text_surface()
+        self.elements.command.set_text(self.command.hex(" "))
 
     def run(self):
         while not self.done:
             self.handle_events()
             self.update_state()
             self.clear_flags()
+            self.update_ui()
+            self.display()
             self.tick()

@@ -6,14 +6,16 @@ environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 import sys
 import pygame
+import pygame_gui
 import serial
 import argparse
 
-from controller import Controller
+from controller import Controller, ElementContainer
 
 
 def main(device):
     pygame.init()
+    pygame.display.set_caption("Pelco D Controller")
 
     if pygame.joystick.get_count() == 0:
         print("No controller found")
@@ -29,7 +31,29 @@ def main(device):
         print(f"Couldn't get serial device: {e}")
         sys.exit(1)
 
-    controller = Controller(joystick=joystick, camera=camera)
+    window = pygame.display.set_mode((800, 600))
+    manager = pygame_gui.UIManager((800, 600))
+
+    elements = ElementContainer(
+        fps=pygame_gui.elements.UITextBox(
+            html_text="",
+            relative_rect=pygame.Rect((0, 0), (45, 40)),
+            manager=manager,
+        ),
+        command=pygame_gui.elements.UITextBox(
+            html_text="",
+            relative_rect=pygame.Rect((60, 0), (180, 40)),
+            manager=manager,
+        ),
+    )
+
+    controller = Controller(
+        joystick=joystick,
+        camera=camera,
+        window=window,
+        manager=manager,
+        elements=elements,
+    )
     controller.run()
     pygame.quit()
     camera.close()
