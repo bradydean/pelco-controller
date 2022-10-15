@@ -10,7 +10,7 @@ import pygame_gui
 import serial
 import argparse
 
-from controller import Controller, ElementContainer
+from controller import Controller, UiElements
 
 
 def main(device):
@@ -34,7 +34,7 @@ def main(device):
     window = pygame.display.set_mode((800, 600))
     manager = pygame_gui.UIManager((800, 600))
 
-    elements = ElementContainer(
+    elements = UiElements(
         fps=pygame_gui.elements.UITextBox(
             html_text="",
             relative_rect=pygame.Rect((0, 0), (45, 40)),

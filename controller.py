@@ -7,7 +7,7 @@ from pelcod import PelcoDMovement
 
 
 @dataclass
-class ElementContainer:
+class UiElements:
     fps: pygame_gui.elements.UITextBox
     command: pygame_gui.elements.UITextBox
 
@@ -18,7 +18,7 @@ class Controller:
     camera: Serial
     window: pygame.surface.Surface
     ui_manager: pygame_gui.UIManager
-    elements: ElementContainer
+    elements: UiElements
     time_delta: float = 0.0
     command: bytes = field(default_factory=bytes)
     clock: pygame.time.Clock = field(default_factory=pygame.time.Clock)
