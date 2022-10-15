@@ -100,9 +100,6 @@ class Controller:
             self.construct_command()
             self.issue_command()
 
-    def clear_flags(self):
-        self.should_move = False
-
     def tick(self):
         self.manager.update(self.time_delta)
         self.time_delta = self.clock.tick(self.frame_rate) / 1000.0
@@ -124,7 +121,6 @@ class Controller:
         while not self.done:
             self.handle_events()
             self.update_state()
-            self.clear_flags()
             self.update_ui()
             self.display()
             self.tick()
