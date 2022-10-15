@@ -39,17 +39,14 @@ class Controller:
     zoom_wide: float = 0.0
 
     frame_rate: int = 137
-    should_move: bool = False
 
     def handle_events(self):
         for event in pygame.event.get():
             self.manager.process_events(event)
-            if event.type == pygame.JOYBUTTONDOWN and event.button == 3:
+            if event.type == pygame.JOYBUTTONDOWN and event.button == 2:
                 self.done = True
             elif event.type == pygame.QUIT:
                 self.done = True
-            elif event.type == pygame.JOYAXISMOTION:
-                self.should_move = True
 
     def get_controller_state(self):
         self.horizontal = self.joystick.get_axis(0)
@@ -96,13 +93,12 @@ class Controller:
         self.camera.write(self.command)
 
     def update_state(self):
-        if self.should_move:
-            self.get_controller_state()
-            self.determine_motion()
-            if self.should_issue_command():
-                self.determine_speed()
-                self.construct_command()
-                self.issue_command()
+        self.get_controller_state()
+        self.determine_motion()
+        if self.should_issue_command():
+            self.determine_speed()
+            self.construct_command()
+            self.issue_command()
 
     def clear_flags(self):
         self.should_move = False
@@ -113,7 +109,7 @@ class Controller:
 
     def display(self):
         background = pygame.Surface((800, 600))
-        background.fill(pygame.Color("#000000"))
+        background.fill(pygame.Color("#202124"))
         self.window.blit(background, (0, 0))
         self.manager.draw_ui(self.window)
         pygame.display.update()
