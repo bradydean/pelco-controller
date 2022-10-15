@@ -10,6 +10,8 @@ from pelcod import PelcoDMovement
 class UiElements:
     fps: pygame_gui.elements.UITextBox
     command: pygame_gui.elements.UITextBox
+    set_preset: pygame_gui.elements.UIButton
+    call_preset: pygame_gui.elements.UIButton
 
 
 @dataclass
@@ -40,6 +42,9 @@ class Controller:
 
     frame_rate: int = 137
 
+    set_preset_pressed: bool = False
+    call_preset_pressed: bool = False
+
     def handle_events(self):
         for event in pygame.event.get():
             self.ui_manager.process_events(event)
@@ -47,6 +52,27 @@ class Controller:
                 self.done = True
             elif event.type == pygame.QUIT:
                 self.done = True
+            elif (
+                event.type == pygame_gui.UI_BUTTON_START_PRESS
+                and event.ui_element == self.elements.set_preset
+            ):
+                if self.set_preset_pressed:
+                    self.set_preset_pressed = False
+                    self.elements.call_preset.enable()
+                elif not self.call_preset_pressed:
+                    self.set_preset_pressed = True
+                    self.elements.call_preset.disable()
+
+            elif (
+                event.type == pygame_gui.UI_BUTTON_START_PRESS
+                and event.ui_element == self.elements.call_preset
+            ):
+                if self.call_preset_pressed:
+                    self.call_preset_pressed = False
+                    self.elements.set_preset.enable()
+                elif not self.set_preset_pressed:
+                    self.call_preset_pressed = True
+                    self.elements.set_preset.disable()
 
     def get_controller_state(self):
         self.horizontal = self.joystick.get_axis(0)
@@ -116,6 +142,10 @@ class Controller:
         self.elements.fps.set_text(f"{int(self.clock.get_fps())}")
         self.elements.command.clear_text_surface()
         self.elements.command.set_text(self.command.hex(" "))
+        if self.set_preset_pressed:
+            self.elements.set_preset.select()
+        if self.call_preset_pressed:
+            self.elements.call_preset.select()
 
     def run(self):
         while not self.done:

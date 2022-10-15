@@ -45,6 +45,16 @@ def main(device):
             relative_rect=pygame.Rect((60, 0), (180, 40)),
             manager=manager,
         ),
+        set_preset=pygame_gui.elements.UIButton(
+            text="Set Preset",
+            relative_rect=pygame.Rect((0, 100), (110, 40)),
+            manager=manager,
+        ),
+        call_preset=pygame_gui.elements.UIButton(
+            text="Call Preset",
+            relative_rect=pygame.Rect((120, 100), (120, 40)),
+            manager=manager,
+        ),
     )
 
     controller = Controller(
